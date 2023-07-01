@@ -55,7 +55,7 @@
         </div>
         <div class="footerItem">
           <h4>帮助中心</h4>
-          <img src="@/assets/wx_cz.jpg">
+          <img src="./images/wx_cz.jpg" alt="">
         </div>
       </div>
       <div class="copyright">
@@ -98,7 +98,7 @@
 
 <script>
 export default {
-  name: 'Footer-',
+  name: 'Footer',
 }
 </script>
 

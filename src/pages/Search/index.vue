@@ -1,12 +1,12 @@
 <template>
   <div>
-    我是登录
+    <h2>{{$route.params.keyWord}}</h2>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Login-'
+  name: 'Search'
 }
 </script>
 

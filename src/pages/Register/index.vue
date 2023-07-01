@@ -1,12 +1,12 @@
 <template>
   <div>
-    我是搜索
+    我是注册
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Search-'
+  name: 'Register'
 }
 </script>
 

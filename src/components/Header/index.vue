@@ -27,12 +27,12 @@
     <div class="bottom">
       <h1 class="logoArea">
         <router-link class="logo" to="/home">
-          <img src="@/assets/logo.png" alt="">
+          <img src="./images/logo.png" alt="">
         </router-link>
       </h1>
       <div class="searchArea">
         <form action="###" class="searchForm">
-          <input type="text" id="autocomplete" class="input-error input-xxlarge"/>
+          <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyWord"/>
           <button class="sui-btn btn-xlarge btn-danger" type="button" @click="gotoSearch">搜索</button>
         </form>
       </div>
@@ -42,12 +42,18 @@
 
 <script>
 export default {
-  name: 'Header-',
+  name: 'Header',
+  data() {
+    return {
+      keyWord: '',
+    }
+  },
   methods: {
     gotoSearch() {
       this.$router.push({
-        path: '/search',
-      })
+        name: 'Search',
+        params: {keyWord: this.keyWord}
+      },() =>{}, () => {})
     }
   }
 }
