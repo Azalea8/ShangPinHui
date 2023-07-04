@@ -52,7 +52,7 @@ export default {
     gotoSearch() {
       this.$router.push({
         name: 'Search',
-        params: {keyWord: this.keyWord}
+        query: {keyWord: this.keyWord}
       },() =>{}, () => {})
     }
   }

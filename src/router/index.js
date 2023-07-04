@@ -31,7 +31,7 @@ export default new VueRouter({
         },
         {
             name: 'Search',
-            path: '/search/:keyWord',
+            path: '/search',
             component: Search,
             meta: {
                 showFooter: true,

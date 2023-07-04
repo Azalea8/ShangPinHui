@@ -13,20 +13,22 @@
         <a href="###">秒杀</a>
       </nav>
       <div class="sort">
-        <div class="all-sort-list2">
-          <div class="item" v-for="c1 in categoryList" :key="c1.categoryId">
-            <h3>
-              <a href="">{{c1.categoryName}}</a>
+        <div class="all-sort-list2" @click="gotoSearch">
+          <div class="item" v-for="(c1, index) in categoryList" :key="c1.categoryId" @mouseleave="currentIndex = -1">
+            <h3 @mouseenter="changeIndex(index)" :class="{cur: currentIndex === index}">
+              <a :data-catagoryName="c1.categoryName" :data-catagory1Id="c1.categoryId">{{ c1.categoryName }}</a>
             </h3>
-            <div class="item-list clearfix">
+            <div class="item-list clearfix" :style="{display: currentIndex === index ? 'block':'none'}">
               <div class="subitem" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
                 <dl class="fore">
                   <dt>
-                    <a href="">{{ c2.categoryName }}</a>
+                    <a :data-catagoryName="c2.categoryName" :data-catagory2Id="c2.categoryId">{{ c2.categoryName }}</a>
                   </dt>
                   <dd>
                     <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                      <a href="">{{ c3.categoryName }}</a>
+                      <a :data-catagoryName="c3.categoryName" :data-catagory3Id="c3.categoryId">{{
+                          c3.categoryName
+                        }}</a>
                     </em>
                   </dd>
                 </dl>
@@ -40,10 +42,40 @@
 </template>
 
 <script>
+import throttle from 'lodash/throttle'
 import {mapState} from "vuex";
 
 export default {
   name: 'TypeNav',
+  data() {
+    return {
+      currentIndex: -1,
+    }
+  },
+  methods: {
+    changeIndex: throttle(function (index) {
+      this.currentIndex = index
+    }, 50),
+    gotoSearch(event) {
+      let element = event.target
+      // console.log(element.dataset)
+      let {catagoryname, catagory1id, catagory2id, catagory3id} = element.dataset
+      if (catagoryname) {
+        let query = {catagoryname: catagoryname,}
+        if (catagory1id) {
+          query.catagory1id = catagory1id
+        } else if (catagory2id) {
+          query.catagory2id = catagory2id
+        } else {
+          query.catagory3id = catagory3id
+        }
+        this.$router.push({
+          name: 'Search',
+          query,
+        })
+      }
+    }
+  },
   created() {
     this.$store.dispatch('home/categoryList')
   },
@@ -163,11 +195,10 @@ export default {
             }
           }
 
-          &:hover {
-            .item-list {
-              display: block;
-            }
-          }
+        }
+
+        .cur {
+          background: skyblue;
         }
       }
     }
