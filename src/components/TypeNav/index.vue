@@ -1,6 +1,6 @@
 <template>
   <div class="type-nav">
-    <div class="container">
+    <div class="container" @mouseleave="changeShow" @mouseenter="isShow = true">
       <h2 class="all">全部商品分类</h2>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -12,31 +12,35 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort">
-        <div class="all-sort-list2" @click="gotoSearch">
-          <div class="item" v-for="(c1, index) in categoryList" :key="c1.categoryId" @mouseleave="currentIndex = -1">
-            <h3 @mouseenter="changeIndex(index)" :class="{cur: currentIndex === index}">
-              <a :data-catagoryName="c1.categoryName" :data-catagory1Id="c1.categoryId">{{ c1.categoryName }}</a>
-            </h3>
-            <div class="item-list clearfix" :style="{display: currentIndex === index ? 'block':'none'}">
-              <div class="subitem" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
-                <dl class="fore">
-                  <dt>
-                    <a :data-catagoryName="c2.categoryName" :data-catagory2Id="c2.categoryId">{{ c2.categoryName }}</a>
-                  </dt>
-                  <dd>
-                    <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                      <a :data-catagoryName="c3.categoryName" :data-catagory3Id="c3.categoryId">{{
-                          c3.categoryName
+      <transition name="sort">
+        <div class="sort" v-show="isShow">
+          <div class="all-sort-list2" @click="gotoSearch">
+            <div class="item" v-for="(c1, index) in categoryList" :key="c1.categoryId">
+              <h3 @mouseenter="changeIndex(index)" :class="{cur: currentIndex === index}">
+                <a :data-catagoryName="c1.categoryName" :data-catagory1Id="c1.categoryId">{{ c1.categoryName }}</a>
+              </h3>
+              <div class="item-list clearfix" :style="{display: currentIndex === index ? 'block':'none'}">
+                <div class="subitem" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
+                  <dl class="fore">
+                    <dt>
+                      <a :data-catagoryName="c2.categoryName" :data-catagory2Id="c2.categoryId">{{
+                          c2.categoryName
                         }}</a>
-                    </em>
-                  </dd>
-                </dl>
+                    </dt>
+                    <dd>
+                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                        <a :data-catagoryName="c3.categoryName" :data-catagory3Id="c3.categoryId">{{
+                            c3.categoryName
+                          }}</a>
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -50,6 +54,12 @@ export default {
   data() {
     return {
       currentIndex: -1,
+      isShow: true,
+    }
+  },
+  mounted() {
+    if (this.$route.path !== '/home') {
+      this.isShow = false
     }
   },
   methods: {
@@ -72,12 +82,16 @@ export default {
         this.$router.push({
           name: 'Search',
           query,
+          params: this.$route.params,
         })
       }
+    },
+    changeShow() {
+      this.currentIndex = -1
+      if (this.$route.path !== '/home') {
+        this.isShow = false
+      }
     }
-  },
-  created() {
-    this.$store.dispatch('home/categoryList')
   },
   computed: {
     ...mapState('home', {categoryList: 'categoryList'})
@@ -201,6 +215,18 @@ export default {
           background: skyblue;
         }
       }
+    }
+
+    .sort-enter{
+      height: 0;
+    }
+
+    .sort-enter-to{
+      height: 461px;
+    }
+
+    .sort-enter-active{
+      transition: 1s;
     }
   }
 }
