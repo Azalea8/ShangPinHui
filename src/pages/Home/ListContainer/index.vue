@@ -110,8 +110,13 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   name: 'ListContainer',
+  computed: {
+    ...mapState('home', {'bannerList': 'bannerList'})
+  }
 }
 </script>
 

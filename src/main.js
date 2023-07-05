@@ -8,7 +8,8 @@ Vue.component(TypeNav.name, TypeNav)
 import router from "@/router";
 // 引入Vuex
 import store from "@/store";
-
+// 引入mockServe
+import '@/mock/mockServe'
 Vue.config.productionTip = false
 
 new Vue({
