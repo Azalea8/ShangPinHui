@@ -20,6 +20,7 @@ export default {
     // 数据统一请求，避免路由组件多次请求数据
     this.$store.dispatch('home/categoryList')
     this.$store.dispatch('home/bannerList')
+    this.$store.dispatch('home/floorList')
   }
 }
 </script>

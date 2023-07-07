@@ -1,5 +1,6 @@
 import {reqCategoryList} from "@/api";
 import {reqBannerList} from "@/api";
+import {reqFloorList} from "@/api";
 
 const actions = {
     async categoryList(context) {
@@ -13,6 +14,12 @@ const actions = {
         if (result.code === 200) {
             context.commit('BANNERLIST', result.data)
         }
+    },
+    async floorList(context) {
+        let reslut = await reqFloorList();
+        if (reslut.code === 200) {
+            context.commit('FLOORLIST', reslut.data)
+        }
     }
 }
 
@@ -22,12 +29,16 @@ const mutations = {
     },
     BANNERLIST(state, value) {
         state.bannerList = value
-    }
+    },
+    FLOORLIST(state, value) {
+        state.floorList = value
+    },
 }
 
 const state = {
     categoryList: [],
     bannerList: [],
+    floorList: [],
 }
 
 const getters = {}

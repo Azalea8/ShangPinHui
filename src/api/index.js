@@ -14,3 +14,10 @@ export const reqBannerList = () => {
         method: 'GET',
     })
 }
+
+export const reqFloorList = () => {
+    return mockRequests({
+        url: '/floor',
+        method: 'GET',
+    })
+}
