@@ -71,7 +71,7 @@ export default {
       // console.log(element.dataset)
       let {catagoryname, catagory1id, catagory2id, catagory3id} = element.dataset
       if (catagoryname) {
-        let query = {catagoryname: catagoryname,}
+        let query = {catagoryName: catagoryname,}
         if (catagory1id) {
           query.catagory1id = catagory1id
         } else if (catagory2id) {
