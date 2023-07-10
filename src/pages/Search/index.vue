@@ -12,14 +12,13 @@
           </ul>
           <ul class="fl sui-tag">
             <li class="with-x" v-show="searchParams.catagoryName">{{ searchParams.catagoryName }}<i @click="removeCatagoryName">x</i></li>
-            <!--            <li class="with-x">iphone<i>×</i></li>
-                        <li class="with-x">华为<i>×</i></li>
-                        <li class="with-x">OPPO<i>×</i></li>-->
+            <li class="with-x" v-show="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeyWord">x</i></li>
+            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(':')[1] }}<i @click="removeTrademark">x</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector/>
+        <SearchSelector @tradermarkInfo="tradermarkInfo"/>
 
         <!--details-->
         <div class="details clearfix">
@@ -161,6 +160,10 @@ export default {
     getData() {
       this.$store.dispatch('search/searchList', this.searchParams)
     },
+    tradermarkInfo(v) {
+      this.searchParams.trademark = `${v.tmId}:${v.tmName}`
+      this.getData()
+    },
     removeCatagoryName() {
       let ref = {
         catagory3id: undefined,
@@ -175,6 +178,23 @@ export default {
         params: this.$route.params,
       })
     },
+    removeKeyWord() {
+      let ref = {
+        keyword: undefined
+      }
+      // 清除输入框中的信息
+      this.$bus.$emit('clearKeyWord')
+
+      this.$router.push({
+        name: 'Search',
+        query: this.$route.query,
+        params: ref,
+      })
+    },
+    removeTrademark() {
+      this.searchParams.trademark = undefined
+      this.getData()
+    }
   },
   beforeDestroy() {
     console.log('Search组件销毁')

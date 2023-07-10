@@ -48,6 +48,11 @@ export default {
       keyWord: '',
     }
   },
+  created() {
+    this.$bus.$on('clearKeyWord', () => {
+      this.keyWord = ''
+    })
+  },
   methods: {
     gotoSearch() {
       this.$router.push({
@@ -56,7 +61,7 @@ export default {
         query: this.$route.query,
       },() =>{}, () => {})
     }
-  }
+  },
 }
 </script>
 
