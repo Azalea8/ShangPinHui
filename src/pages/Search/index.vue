@@ -14,34 +14,25 @@
             <li class="with-x" v-show="searchParams.catagoryName">{{ searchParams.catagoryName }}<i @click="removeCatagoryName">x</i></li>
             <li class="with-x" v-show="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeyWord">x</i></li>
             <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(':')[1] }}<i @click="removeTrademark">x</i></li>
+            <li class="with-x" v-for="(attr, index) in searchParams.props" :key="index">
+              {{ attr.split(':')[1] }}
+              <i @click="removeAttr(index)">x</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @tradermarkInfo="tradermarkInfo"/>
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo"/>
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active: isOne}">
+                  <a href="#">综合<span v-show="isOne">{{this.searchParams.order.split(':')[1] === 'desc' ? '下' : '上'}}</span></a>
+                <li :class="{active: isTwo}">
+                  <a href="#">价格<span v-show="isTwo">{{this.searchParams.order.split(':')[1] === 'desc' ? '下' : '上'}}</span></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
                 </li>
               </ul>
             </div>
@@ -128,7 +119,7 @@ export default {
         catagory3id: '',
         catagoryName: '',
         keyword: '',
-        order: '',
+        order: '1:desc',
         pageNo: 1,
         pageSize: 10,
         props: [],
@@ -154,15 +145,29 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('search', ['goodsList', 'trademarkList', 'attrsList'])
+    ...mapGetters('search', ['goodsList', 'trademarkList', 'attrsList']),
+    isOne() {
+     return this.searchParams.order.indexOf('1') !== -1
+    },
+    isTwo() {
+      return this.searchParams.order.indexOf('2') !== -1
+    }
   },
   methods: {
     getData() {
       this.$store.dispatch('search/searchList', this.searchParams)
     },
-    tradermarkInfo(v) {
-      this.searchParams.trademark = `${v.tmId}:${v.tmName}`
+    trademarkInfo(trademark) {
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`
       this.getData()
+    },
+    attrInfo(attr) {
+      let props = `${attr.id}:${attr.value}:${attr.name}`
+      if(this.searchParams.props.indexOf(props) === -1) {
+        this.searchParams.props.push(props)
+        this.getData()
+      }
+      // console.log(props)
     },
     removeCatagoryName() {
       let ref = {
@@ -194,7 +199,11 @@ export default {
     removeTrademark() {
       this.searchParams.trademark = undefined
       this.getData()
-    }
+    },
+    removeAttr(index) {
+      this.searchParams.props.splice(index, 1)
+      this.getData()
+    },
   },
   beforeDestroy() {
     console.log('Search组件销毁')
