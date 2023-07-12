@@ -11,9 +11,12 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x" v-show="searchParams.catagoryName">{{ searchParams.catagoryName }}<i @click="removeCatagoryName">x</i></li>
-            <li class="with-x" v-show="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeyWord">x</i></li>
-            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(':')[1] }}<i @click="removeTrademark">x</i></li>
+            <li class="with-x" v-show="searchParams.catagoryName">{{ searchParams.catagoryName }}<i
+                @click="removeCatagoryName">x</i></li>
+            <li class="with-x" v-show="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeyWord">x</i>
+            </li>
+            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(':')[1] }}<i
+                @click="removeTrademark">x</i></li>
             <li class="with-x" v-for="(attr, index) in searchParams.props" :key="index">
               {{ attr.split(':')[1] }}
               <i @click="removeAttr(index)">x</i></li>
@@ -28,11 +31,15 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li :class="{active: isOne}">
-                  <a href="#">综合<span v-show="isOne">{{this.searchParams.order.split(':')[1] === 'desc' ? '下' : '上'}}</span></a>
-                <li :class="{active: isTwo}">
-                  <a href="#">价格<span v-show="isTwo">{{this.searchParams.order.split(':')[1] === 'desc' ? '下' : '上'}}</span></a>
+                <li :class="{active: isOne}" @click="changeOrder(1)">
+                  <a>综合
+                    <span v-show="isOne">{{ this.searchParams.order.split(':')[1] === 'desc' ? '下' : '上' }}</span>
+                  </a>
                 </li>
+                <li :class="{active: isTwo}" @click="changeOrder(2)">
+                  <a>价格
+                    <span v-show="isTwo">{{ this.searchParams.order.split(':')[1] === 'desc' ? '下' : '上' }}</span>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -67,35 +74,8 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <!-- 分页器  -->
+          <Pagination :pageNo="1" :pageSize="10" :total="91" :continues="7"></Pagination>
         </div>
       </div>
     </div>
@@ -147,7 +127,7 @@ export default {
   computed: {
     ...mapGetters('search', ['goodsList', 'trademarkList', 'attrsList']),
     isOne() {
-     return this.searchParams.order.indexOf('1') !== -1
+      return this.searchParams.order.indexOf('1') !== -1
     },
     isTwo() {
       return this.searchParams.order.indexOf('2') !== -1
@@ -163,7 +143,7 @@ export default {
     },
     attrInfo(attr) {
       let props = `${attr.id}:${attr.value}:${attr.name}`
-      if(this.searchParams.props.indexOf(props) === -1) {
+      if (this.searchParams.props.indexOf(props) === -1) {
         this.searchParams.props.push(props)
         this.getData()
       }
@@ -202,6 +182,29 @@ export default {
     },
     removeAttr(index) {
       this.searchParams.props.splice(index, 1)
+      this.getData()
+    },
+    changeOrder(num) {
+      let currentNum =  this.searchParams.order.split(':')[0]
+      let currentOrder = this.searchParams.order.split(':')[1]
+      switch (num) {
+        case 1:
+          if(currentNum === '1'){
+            // 切换升降序
+            this.searchParams.order = currentOrder === 'desc' ? '1:asc' : '1:desc'
+          }else {
+            this.searchParams.order = '1:desc'
+          }
+          break
+        case 2:
+          if(currentNum === '2'){
+            // 切换升降序
+            this.searchParams.order = currentOrder === 'desc' ? '2:asc' : '2:desc'
+          }else {
+            this.searchParams.order = '2:desc'
+          }
+          break
+      }
       this.getData()
     },
   },

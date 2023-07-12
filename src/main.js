@@ -3,8 +3,10 @@ import App from './App.vue'
 // 注册全局组件
 import TypeNav from "@/components/TypeNav/index.vue";
 import Carousel from "@/components/Carousel/index.vue";
+import Pagination from "@/components/Pagination/index.vue";
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carousel.name, Carousel)
+Vue.component(Pagination.name, Pagination)
 
 // 引入路由
 import router from "@/router";
