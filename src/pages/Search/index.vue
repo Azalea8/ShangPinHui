@@ -33,12 +33,12 @@
               <ul class="sui-nav">
                 <li :class="{active: isOne}" @click="changeOrder(1)">
                   <a>综合
-                    <span v-show="isOne">{{ this.searchParams.order.split(':')[1] === 'desc' ? '下' : '上' }}</span>
+                    <span v-show="isOne">{{ this.searchParams.order.split(':')[1] === 'desc' ? '降序' : '升序' }}</span>
                   </a>
                 </li>
                 <li :class="{active: isTwo}" @click="changeOrder(2)">
                   <a>价格
-                    <span v-show="isTwo">{{ this.searchParams.order.split(':')[1] === 'desc' ? '下' : '上' }}</span>
+                    <span v-show="isTwo">{{ this.searchParams.order.split(':')[1] === 'desc' ? '降序' : '升序' }}</span>
                   </a>
                 </li>
               </ul>
@@ -75,7 +75,7 @@
             </ul>
           </div>
           <!-- 分页器  -->
-          <Pagination :pageNo="1" :pageSize="10" :total="91" :continues="7"></Pagination>
+          <Pagination @getPageNo="getPageNo" :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5"></Pagination>
         </div>
       </div>
     </div>
@@ -126,6 +126,9 @@ export default {
   },
   computed: {
     ...mapGetters('search', ['goodsList', 'trademarkList', 'attrsList']),
+    ...mapState('search', {
+      total: state => state.searchList.total
+    }),
     isOne() {
       return this.searchParams.order.indexOf('1') !== -1
     },
@@ -136,6 +139,10 @@ export default {
   methods: {
     getData() {
       this.$store.dispatch('search/searchList', this.searchParams)
+    },
+    getPageNo(pageNo) {
+      this.searchParams.pageNo = pageNo
+      this.getData()
     },
     trademarkInfo(trademark) {
       this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`

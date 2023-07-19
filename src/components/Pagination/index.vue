@@ -1,20 +1,21 @@
 <template>
   <div class="pagination">
-    <button>上一页</button>
-    <button>1</button>
-    <button>···</button>
+    <button :disabled="numberArr[0] === 1" @click="$emit('getPageNo', pageNo-1)">上一页</button>
+    <button v-if="numberArr[0] > 1" @click="$emit('getPageNo', 1)">1</button>
+    <button v-if="numberArr[0] > 2">···</button>
 
-    <button>3</button>
+<!--    <button>3</button>
     <button>4</button>
     <button>5</button>
     <button>6</button>
-    <button>7</button>
+    <button>7</button>-->
+    <button v-for="(num, index) in numberArr" :key="index" @click="$emit('getPageNo', num)">{{num}}</button>
 
-    <button>···</button>
-    <button>{{totalPage}}</button>
-    <button>下一页</button>
+    <button v-if="numberArr.at(-1) < totalPage - 1">···</button>
+    <button v-if="numberArr.at(-1) < totalPage" @click="$emit('getPageNo', totalPage)">{{totalPage}}</button>
+    <button :disabled="numberArr.at(-1) === totalPage" @click="$emit('getPageNo', pageNo+1)">下一页</button>
 
-    <button style="margin-left: 30px">共 {{ total }} 条</button>
+    <button style="margin-left: 30px">{{ total }} 条---{{totalPage}} 页</button>
   </div>
 </template>
 
@@ -25,6 +26,17 @@ export default {
   computed: {
     totalPage() {
       return Math.ceil(this.total / this.pageSize)
+    },
+    numberArr() {
+      let tmp = this.pageNo - Math.floor(this.continues/2)
+      const start = tmp > 0 ? tmp : 1
+      tmp = this.pageNo + Math.floor(this.continues/2)
+      const end = tmp <= this.totalPage ? tmp : this.totalPage
+      let ans = []
+      for(let i = start;i <= end;i++){
+        ans.push(i)
+      }
+      return ans
     }
   }
 }
