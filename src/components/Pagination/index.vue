@@ -4,12 +4,7 @@
     <button v-if="numberArr[0] > 1" @click="$emit('getPageNo', 1)">1</button>
     <button v-if="numberArr[0] > 2">···</button>
 
-<!--    <button>3</button>
-    <button>4</button>
-    <button>5</button>
-    <button>6</button>
-    <button>7</button>-->
-    <button v-for="(num, index) in numberArr" :key="index" @click="$emit('getPageNo', num)">{{num}}</button>
+    <button v-for="(num, index) in numberArr" :key="index" @click="$emit('getPageNo', num)" :class="{active: pageNo===num}">{{num}}</button>
 
     <button v-if="numberArr.at(-1) < totalPage - 1">···</button>
     <button v-if="numberArr.at(-1) < totalPage" @click="$emit('getPageNo', totalPage)">{{totalPage}}</button>
